@@ -14,4 +14,14 @@ public class ReimbursementService {
         return reimbursementRepository.getAllReimbursement();
 
     }
+    public List<Reimbursement> getAllReimbursementForEmployee(int employeeId) throws SQLException {
+        return reimbursementRepository.getAllReimbursementForEmployee(employeeId);
+
+    }
+
+    public Reimbursement addingReimbursement(String description, int amount,boolean pendingorcompleted, boolean approvedordenied, int employeeId, int managerId) throws SQLException{
+
+        return reimbursementRepository.addingReimbursement(description, amount, pendingorcompleted, approvedordenied, employeeId, managerId);
+
+    }
 }

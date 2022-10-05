@@ -2,6 +2,7 @@ package com.revature.repository;
 
 
 import com.revature.model.Reimbursement;
+import com.revature.model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class ReimbursementRepository {
                String description = rs.getString("description");
                int amount = rs.getInt("amount");
                boolean status = rs.getBoolean("pendingorcompleted");
-               boolean approval = rs.getBoolean("aprovedordenied");
+               boolean approval = rs.getBoolean("approvedordenied");
                int eId = rs.getInt("employee_id");
                int managerId = rs.getInt("manager_id");
 
@@ -54,7 +55,7 @@ public class ReimbursementRepository {
                 String description = rs.getString("description");
                 int amount = rs.getInt("amount");
                 boolean status = rs.getBoolean("pendingorcompleted");
-                boolean approval = rs.getBoolean("aprovedordenied");
+                boolean approval = rs.getBoolean("approvedordenied");
                 int eId = rs.getInt("employee_id");
                 int managerId = rs.getInt("manager_id");
 
@@ -67,12 +68,12 @@ public class ReimbursementRepository {
         }
     }
 
-    public void reimbursementUpdate (int reimbursementId, boolean aprovedordenied, int managerId) throws SQLException{
+    public void reimbursementUpdate (int reimbursementId, boolean approvedordenied, int managerId) throws SQLException{
         try (Connection connectionObj = ConnectionFactory.createConnection()){
-            String sql = "UPDATE reimbursements SET aprovedordenied = ?,manager_id =? WHERE id = ?;";
+            String sql = "UPDATE reimbursements SET approvedordenied = ?,manager_id =? WHERE id = ?;";
 
             PreparedStatement pstmt = connectionObj.prepareStatement(sql);
-            pstmt.setBoolean(1, aprovedordenied);
+            pstmt.setBoolean(1, approvedordenied);
             pstmt.setInt(2, managerId);
             pstmt.setInt(3, reimbursementId);
 
@@ -81,5 +82,27 @@ public class ReimbursementRepository {
         }
     }
 
+    public Reimbursement addingReimbursement (String description, int amount,boolean pendingorcompleted, boolean approvedordenied, int employeeId, int managerId) throws SQLException {
+        try (Connection connectionObj = ConnectionFactory.createConnection()) {
+            String sql = "insert into reimbursements (description, amount, pendingorcompleted, approvedordenied, employee_id, manager_id) values (?, ?, ?, ?, ?, ?);";
+
+            PreparedStatement pstmt = connectionObj.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            pstmt.setString(1, description);
+            pstmt.setInt(2, amount);
+            pstmt.setBoolean(3, false);
+            pstmt.setBoolean(4, false);
+            pstmt.setInt(5, employeeId);
+            pstmt.setInt(6, managerId);
+
+            int numberOfRecordsAdded = pstmt.executeUpdate();
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+            rs.next();
+            int id = rs.getInt(1);
+
+            return new Reimbursement(id, description, amount, false, false, employeeId, managerId);
+        }
+    }
 
 }

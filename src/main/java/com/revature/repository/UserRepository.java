@@ -1,6 +1,7 @@
 package com.revature.repository;
 
 import com.revature.model.User;
+import org.postgresql.util.PSQLException;
 
 import java.sql.*;
 
@@ -59,5 +60,29 @@ public class UserRepository {
         }
 
 
+    }
+
+    public User addUser(String username, String password, String firstname, String lastname, int roleId) throws SQLException, PSQLException {
+        try (Connection connectionObject = ConnectionFactory.createConnection()) {
+            String sql = "insert into users (username, password, first_name,last_name, role_id) values (?, ?, ?, ?, ?)";
+
+            PreparedStatement pstmt = connectionObject.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            pstmt.setString(3, firstname);
+            pstmt.setString(4, lastname);
+            pstmt.setInt(5, 1); //1 represent employee role
+
+            int numberOfRecordsAdded = pstmt.executeUpdate();
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+            rs.next();
+            int id = rs.getInt(1);
+
+            return new User(id, username, password, firstname, lastname, 1);
+
+
+        }
     }
 }
