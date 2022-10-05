@@ -2,7 +2,6 @@ package com.revature.repository;
 
 
 import com.revature.model.Reimbursement;
-import com.revature.model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -37,6 +36,33 @@ public class ReimbursementRepository {
            return reimbursements;
         }
     }
+    public List<Reimbursement> getAllPendingReimbursements () throws SQLException {
+        try (Connection connectionObject = ConnectionFactory.createConnection()){
+
+            List<Reimbursement> reimbursements = new ArrayList<>();
+
+            String sql = "SELECT * FROM reimbursements WHERE pendingorcompleted = false";
+
+            Statement stmt = connectionObject.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()){
+                int id = rs.getInt("id");
+                String description = rs.getString("description");
+                int amount = rs.getInt("amount");
+                boolean status = rs.getBoolean("pendingorcompleted");
+                boolean approval = rs.getBoolean("approvedordenied");
+                int eId = rs.getInt("employee_id");
+                int managerId = rs.getInt("manager_id");
+
+                Reimbursement reimbursement = new Reimbursement(id, description, amount, status, approval, eId, managerId);
+
+                reimbursements.add(reimbursement);
+
+            }
+            return reimbursements;
+        }
+    }
     public List<Reimbursement> getAllReimbursementForEmployee (int employeeId) throws SQLException {
         try (Connection connectionObject = ConnectionFactory.createConnection()){
 
@@ -67,19 +93,53 @@ public class ReimbursementRepository {
             return reimbursements;
         }
     }
+    public List<Reimbursement> getAllPendingReimbursementForEmployee (int employeeId) throws SQLException {
+        try (Connection connectionObject = ConnectionFactory.createConnection()){
 
-    public void reimbursementUpdate (int reimbursementId, boolean approvedordenied, int managerId) throws SQLException{
+            List<Reimbursement> reimbursements = new ArrayList<>();
+
+            String sql = "SELECT * FROM reimbursements WHERE pendingorcompleted = false";
+
+            PreparedStatement pstm = connectionObject.prepareStatement(sql);
+
+            pstm.setInt(1, employeeId);
+
+            ResultSet rs = pstm.executeQuery();
+
+            while (rs.next()){
+                int id = rs.getInt("id");
+                String description = rs.getString("description");
+                int amount = rs.getInt("amount");
+                boolean status = rs.getBoolean("pendingorcompleted");
+                boolean approval = rs.getBoolean("approvedordenied");
+                int eId = rs.getInt("employee_id");
+                int managerId = rs.getInt("manager_id");
+
+                Reimbursement reimbursement = new Reimbursement(id, description, amount, status, approval, eId, managerId);
+
+                reimbursements.add(reimbursement);
+
+            }
+            return reimbursements;
+        }
+    }
+
+
+
+    public Reimbursement reimbursementUpdate (int reimbursementId, boolean pendingorcompleted , boolean approvedordenied, int managerId) throws SQLException{
         try (Connection connectionObj = ConnectionFactory.createConnection()){
-            String sql = "UPDATE reimbursements SET approvedordenied = ?,manager_id =? WHERE id = ?;";
+            String sql = "UPDATE reimbursements SET pendingorcompleted = ?, approvedordenied = ?,manager_id =? WHERE id = ?;";
 
             PreparedStatement pstmt = connectionObj.prepareStatement(sql);
-            pstmt.setBoolean(1, approvedordenied);
-            pstmt.setInt(2, managerId);
-            pstmt.setInt(3, reimbursementId);
+            pstmt.setBoolean(1, pendingorcompleted);
+            pstmt.setBoolean(2, approvedordenied);
+            pstmt.setInt(3, managerId);
+            pstmt.setInt(4, reimbursementId);
 
             int numberOfRecordsUpdated = pstmt.executeUpdate();
 
         }
+        return null;
     }
 
     public Reimbursement addingReimbursement (String description, int amount,boolean pendingorcompleted, boolean approvedordenied, int employeeId, int managerId) throws SQLException {

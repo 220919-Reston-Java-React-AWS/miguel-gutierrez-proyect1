@@ -24,9 +24,16 @@ public class Main {
         ReimbursementControllerAdding rca= new ReimbursementControllerAdding();
         rca.mapEndPoint(app);
 
+        ReimbursemetControllerUpdate rcu = new ReimbursemetControllerUpdate();
+        rcu.mapEndPoint(app);
+
         ReimbursementControllerPrevious rcp = new ReimbursementControllerPrevious();
         rcp.mapEndPoints(app);
 
+
+
+        ReimbursementControllerPending rcpen = new ReimbursementControllerPending();
+        rcpen.mapEndPoints(app);
 
 
         ReimbursementController reimbursementController = new ReimbursementController();

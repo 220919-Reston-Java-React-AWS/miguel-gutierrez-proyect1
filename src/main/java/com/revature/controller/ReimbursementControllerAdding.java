@@ -24,7 +24,7 @@ public class ReimbursementControllerAdding {
                         if (credential.getDescription()== ""){
                             ctx.result("Please check you insert the correct description");
                         }else{
-                        Reimbursement reimbursement = reimbursementService.addingReimbursement(credential.getDescription(), credential.getAmount(), credential.isStatus(), credential.isApproval(), user.getId(), credential.getManagerId());
+                        Reimbursement reimbursement = reimbursementService.addingReimbursement(credential.getDescription(), credential.getAmount(), credential.isPendingorcompleted(), credential.isApproval(), user.getId(), credential.getManagerId());
                         ctx.result("New reimbursement added");
                         }
                     }else {

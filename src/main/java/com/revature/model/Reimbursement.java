@@ -10,7 +10,7 @@ public class Reimbursement {
     private int id;
     private String description;
     private int amount;
-    private boolean status;
+    private boolean pendingorcompleted;
 
     private boolean approval;
     private int userId;
@@ -21,11 +21,11 @@ public class Reimbursement {
 
     }
 
-    public Reimbursement(int id, String description, int amount, boolean status, boolean approval, int userId, int managerId) {
+    public Reimbursement(int id, String description, int amount, boolean pendingorcompleted, boolean approval, int userId, int managerId) {
         this.id = id;
         this.description = description;
         this.amount = amount;
-        this.status = status;
+        this.pendingorcompleted = pendingorcompleted;
         this.approval = approval;
         this.userId = userId;
         this.managerId = managerId;
@@ -55,12 +55,12 @@ public class Reimbursement {
         this.amount = amount;
     }
 
-    public boolean isStatus() {
-        return status;
+    public boolean isPendingorcompleted() {
+        return pendingorcompleted;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setPendingorcompleted(boolean pendingorcompleted) {
+        this.pendingorcompleted = pendingorcompleted;
     }
 
     public boolean isApproval() {
@@ -92,12 +92,12 @@ public class Reimbursement {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Reimbursement that = (Reimbursement) o;
-        return id == that.id && amount == that.amount && status == that.status && approval == that.approval && userId == that.userId && managerId == that.managerId && Objects.equals(description, that.description);
+        return id == that.id && amount == that.amount && pendingorcompleted == that.pendingorcompleted && approval == that.approval && userId == that.userId && managerId == that.managerId && Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, amount, status, approval, userId, managerId);
+        return Objects.hash(id, description, amount, pendingorcompleted, approval, userId, managerId);
     }
 
     @Override
@@ -106,10 +106,12 @@ public class Reimbursement {
                 "id=" + id +
                 ", description='" + description + '\'' +
                 ", amount=" + amount +
-                ", status=" + status +
+                ", pendingorcompleted=" + pendingorcompleted +
                 ", approval=" + approval +
                 ", userId=" + userId +
                 ", managerId=" + managerId +
                 '}';
     }
+
 }
+
